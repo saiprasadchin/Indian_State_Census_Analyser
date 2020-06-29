@@ -73,4 +73,16 @@ public class StateCensusAnalyserTest {
             Assert.assertEquals(CensusAnalyserException.ExceptionType.WRONG_DELIMETER_WRONG_HEADER_FILE,e.type);
         }
     }
+
+    @Test
+    public void givenIndianStateCodeCSVFile_ReturnsCorrectRecords() {
+        StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
+        int numOfRecords = 0;
+        try {
+            numOfRecords = censusAnalyser.loadIndiaStateCodeData(StateCensusAnalyserTest.INDIA_STATE_CODE_CSV_FILE_PATH);
+            Assert.assertEquals(37,numOfRecords);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }
