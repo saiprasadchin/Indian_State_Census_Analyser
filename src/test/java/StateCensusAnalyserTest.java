@@ -121,4 +121,16 @@ public class StateCensusAnalyserTest {
             Assert.assertEquals(CensusAnalyserException.ExceptionType.WRONG_DELIMETER_WRONG_HEADER_FILE, e.type);
         }
     }
+
+    @Test
+    public void givenIndiaStateCodeData_WithWrongHeader_ShouldThrowException() {
+        try {
+            StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
+            ExpectedException exceptionRule = ExpectedException.none();
+            exceptionRule.expect(CensusAnalyserException.class);
+            censusAnalyser.loadIndiaStateCodeData(INDIA_STATE_CODE_CSV_FILE_PATH_INCORRECT_HEADER);
+        } catch (CensusAnalyserException e) {
+            Assert.assertEquals(CensusAnalyserException.ExceptionType.WRONG_DELIMETER_WRONG_HEADER_FILE,e.type);
+        }
+    }
 }
