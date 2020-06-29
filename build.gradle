@@ -8,7 +8,8 @@ version '1.0-SNAPSHOT'
 repositories {
     mavenCentral()
 }
-
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    compile 'com.google.code.gson:gson:2.2.+'
+    compile group: 'com.opencsv', name: 'opencsv', version: '4.0'
 }
