@@ -1,4 +1,5 @@
 package com.bridgelabz.censusanalyser.controller;
+import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.models.CSVStateCensus;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -10,7 +11,7 @@ import java.util.Iterator;
 import java.util.stream.StreamSupport;
 
 public class StateCensusAnalyser {
-    public int loadIndiaCensusData(String csvFilePath) throws Exception {
+    public int loadIndiaCensusData(String csvFilePath) {
         int noOfRecords = 0;
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             System.out.println("test");
@@ -22,7 +23,7 @@ public class StateCensusAnalyser {
             Iterable<CSVStateCensus> csvIterable = () -> censusCSVIterator;
             noOfRecords = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new CensusAnalyserException(e.getMessage(),CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
         return noOfRecords;
     }
