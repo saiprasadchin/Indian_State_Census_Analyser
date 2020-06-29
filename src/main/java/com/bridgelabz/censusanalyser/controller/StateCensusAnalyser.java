@@ -1,6 +1,7 @@
 package com.bridgelabz.censusanalyser.controller;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.models.CSVStateCensus;
+import com.bridgelabz.censusanalyser.models.CSVStateCode;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 import java.io.IOException;
@@ -15,7 +16,6 @@ public class StateCensusAnalyser {
     public int loadIndiaCensusData(String csvFilePath) {
         int noOfRecords = 0;
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
-            System.out.println("test");
             CsvToBeanBuilder<CSVStateCensus> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
             csvToBeanBuilder.withType(CSVStateCensus.class);
             csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
@@ -26,8 +26,27 @@ public class StateCensusAnalyser {
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }catch (RuntimeException e) {
-            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.WRONG_HEADER_FILE);
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.WRONG_DELIMETER_WRONG_HEADER_FILE);
         }
         return noOfRecords;
     }
+
+    public int loadIndiaStateCodeData(String csvFilePath) {
+        int noOfRecords = 0;
+        try (Reader readerState = Files.newBufferedReader(Paths.get(csvFilePath))) {
+            CsvToBeanBuilder<CSVStateCode> csvToBeanBuilder = new CsvToBeanBuilder<>(readerState);
+            csvToBeanBuilder.withType(CSVStateCode.class);
+            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
+            CsvToBean<CSVStateCode> csvToBean = csvToBeanBuilder.build();
+            Iterator<CSVStateCode> stateCSVIterator = csvToBean.iterator();
+            Iterable<CSVStateCode> csvIterable = () -> stateCSVIterator;
+            noOfRecords = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
+        } catch (IOException e) {
+            throw new CensusAnalyserException(e.getMessage(),CensusAnalyserException.ExceptionType.STATE_CODE_FILE_PROBLEM);
+        }catch (RuntimeException e) {
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.WRONG_DELIMETER_WRONG_HEADER_FILE);
+        }
+        return noOfRecords;
+    }
+
 }
