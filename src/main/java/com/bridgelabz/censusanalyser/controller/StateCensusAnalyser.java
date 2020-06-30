@@ -29,7 +29,7 @@ public class StateCensusAnalyser {
     public int loadIndiaStateCodeData(String csvFilePath) {
         int noOfRecords = 0;
         try (Reader readerState = Files.newBufferedReader(Paths.get(csvFilePath))) {
-            Iterator<CSVStateCode> stateCSVIterator = getCSVFileIteratorStateCode(readerState,CSVStateCode.class);
+            Iterator<CSVStateCode> stateCSVIterator = getCSVFileIterator(readerState,CSVStateCode.class);
             Iterable<CSVStateCode> csvIterable = () -> stateCSVIterator;
             noOfRecords = (int) StreamSupport.stream(csvIterable.spliterator(), false).count();
         } catch (IOException e) {
@@ -39,20 +39,16 @@ public class StateCensusAnalyser {
         }
         return noOfRecords;
     }
-    private Iterator<CSVStateCensus> getCSVFileIterator(Reader reader, Class csvClass){
-        CsvToBeanBuilder<CSVStateCensus> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
-        csvToBeanBuilder.withType(CSVStateCensus.class);
-        csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-        CsvToBean<CSVStateCensus> csvToBean = csvToBeanBuilder.build();
-        return csvToBean.iterator();
-    }
 
-    private Iterator<CSVStateCode> getCSVFileIteratorStateCode(Reader reader, Class csvClass){
-        CsvToBeanBuilder<CSVStateCode> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
-        csvToBeanBuilder.withType(CSVStateCode.class);
-        csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-        CsvToBean<CSVStateCode> csvToBean = csvToBeanBuilder.build();
-        return csvToBean.iterator();
+    private <E> Iterator<E> getCSVFileIterator(Reader reader, Class csvClass)throws  CensusAnalyserException{
+        try {
+            CsvToBeanBuilder<E> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
+            csvToBeanBuilder.withType(csvClass);
+            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
+            CsvToBean<E> csvToBean = csvToBeanBuilder.build();
+            return csvToBean.iterator();
+        }catch (IllegalStateException e){
+            throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
+        }
     }
-
 }
