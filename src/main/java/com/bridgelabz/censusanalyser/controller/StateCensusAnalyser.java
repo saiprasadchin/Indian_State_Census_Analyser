@@ -4,8 +4,6 @@ import com.bridgelabz.censusanalyser.models.CSVStateCensus;
 import com.bridgelabz.censusanalyser.models.CSVStateCode;
 import com.bridgelabz.censusanalyser.opencsvbuilder.CSVBuilderException;
 import com.bridgelabz.censusanalyser.opencsvbuilder.CSVBuilderFactory;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
