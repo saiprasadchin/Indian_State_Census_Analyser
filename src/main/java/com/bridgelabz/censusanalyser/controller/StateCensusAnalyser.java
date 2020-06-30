@@ -2,6 +2,7 @@ package com.bridgelabz.censusanalyser.controller;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.models.CSVStateCensus;
 import com.bridgelabz.censusanalyser.models.CSVStateCode;
+import com.bridgelabz.censusanalyser.opencsvbuilder.CSVBuilderException;
 import com.bridgelabz.censusanalyser.opencsvbuilder.CSVBuilderFactory;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
@@ -23,6 +24,8 @@ public class StateCensusAnalyser {
             throw new CensusAnalyserException(e.getMessage(),CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }catch (RuntimeException e) {
             throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.WRONG_DELIMETER_WRONG_HEADER_FILE);
+        }catch (CSVBuilderException e) {
+            throw new CensusAnalyserException(e.getMessage(),CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
         }
         return noOfRecords;
     }
@@ -37,6 +40,8 @@ public class StateCensusAnalyser {
             throw new CensusAnalyserException(e.getMessage(),CensusAnalyserException.ExceptionType.STATE_CODE_FILE_PROBLEM);
         }catch (RuntimeException e) {
             throw new CensusAnalyserException(e.getMessage(), CensusAnalyserException.ExceptionType.WRONG_DELIMETER_WRONG_HEADER_FILE);
+        }catch (CSVBuilderException e) {
+            throw new CensusAnalyserException(e.getMessage(),CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
         }
         return noOfRecords;
     }
