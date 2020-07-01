@@ -1,5 +1,7 @@
 import com.bridgelabz.censusanalyser.controller.StateCensusAnalyser;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
+import com.bridgelabz.censusanalyser.models.CSVStateCensus;
+import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -116,5 +118,13 @@ public class StateCensusAnalyserTest {
         } catch (CensusAnalyserException e) {
             Assert.assertEquals(CensusAnalyserException.ExceptionType.WRONG_DELIMETER_WRONG_HEADER_FILE, e.type);
         }
+    }
+
+    @Test
+    public void getIndianCensusData_WhenSortedOnState_ShouldReturnSortedResult() {
+        StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
+        String sortedCensusData = censusAnalyser.getStateWiseSortedCensusData(INDIA_CENSUS_CSV_FILE_PATH,"STATE");
+        CSVStateCensus[] censusCSV = new Gson().fromJson(sortedCensusData, CSVStateCensus[].class);
+        Assert.assertEquals("Andhra Pradesh", censusCSV[0].state);
     }
 }
