@@ -113,6 +113,5 @@ public class StateCensusAnalyser {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 }
