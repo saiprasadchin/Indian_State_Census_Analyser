@@ -15,8 +15,9 @@ public class StateCensusAnalyserTest {
     private static final String INDIA_STATE_CODE_CSV_FILE_PATH_INCORRECT_TYPE = "./src/test/resources/IndiaStateCode.txt";
     private static final String WRONG_STATE_CODE_CSV_FILE_PATH = "./src/test/resources/IndiaStateCode1.csv";
     private static final String INDIA_STATE_CODE_CSV_FILE_PATH_INCORRECT_HEADER = "./src/test/resources/IndiaStateCodeWrong.csv";
-    private static final String SAMPLE_JSON_FILE_PATH = "./src/test/output/json-sample.json";
+    private static final String AREA_JSON_FILE_PATH = "./src/test/output/json-area.json";
     private static final String POPULOUS_JSON_FILE_PATH = "./src/test/output/json-populous.json";
+    private static final String POPULATION_DENSITY_JSON_FILE_PATH = "./src/test/output/population-density.json";
 
     @Test
     public void givenIndianCensusCSVFile_ReturnsCorrectRecords() {
@@ -159,21 +160,30 @@ public class StateCensusAnalyserTest {
     }
 
     @Test
-    public void getIndianCensusData_WhenSortedOnArea_ShouldReturnSortedResult() {
+    public void getIndianCensusData_WhenSortedOnAreaFile_ShouldReturnSortedResult() {
         StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
         censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
         String jsonString  = censusAnalyser.getStateWiseSortedCensusData("AREA");
-        censusAnalyser.jsonFileWriter(SAMPLE_JSON_FILE_PATH,jsonString);
+        censusAnalyser.jsonFileWriter(AREA_JSON_FILE_PATH,jsonString);
         CSVStateCensus[] censusCSV = new Gson().fromJson(jsonString, CSVStateCensus[].class);
         Assert.assertEquals("Rajasthan", censusCSV[0].state);
     }
 
     @Test
-    public void getIndianCensusData_WhenSortedOnPopulation_ShouldReturnSortedResult() {
+    public void getIndianCensusData_WhenSortedOnPopulationFile_ShouldReturnSortedResult() {
+        StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
+        int actualAvlue = censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+        String jsonString  = censusAnalyser.getStateWiseSortedCensusData("POPULAS_STATE");
+        censusAnalyser.jsonFileWriter(POPULOUS_JSON_FILE_PATH,jsonString);
+        Assert.assertEquals(29, actualAvlue);
+    }
+
+    @Test
+    public void getIndianCensusData_WhenSortedOnPopulationDensityFile_ShouldReturnSortedResult() {
         StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
         int actualAvlue = censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
         String jsonString  = censusAnalyser.getStateWiseSortedCensusData("POPULATION_DENSITY");
-        censusAnalyser.jsonFileWriter(POPULOUS_JSON_FILE_PATH,jsonString);
+        censusAnalyser.jsonFileWriter(POPULATION_DENSITY_JSON_FILE_PATH,jsonString);
         Assert.assertEquals(29, actualAvlue);
     }
 }
