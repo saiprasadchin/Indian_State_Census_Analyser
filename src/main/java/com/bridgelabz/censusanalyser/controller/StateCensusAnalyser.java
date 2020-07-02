@@ -1,24 +1,24 @@
 package com.bridgelabz.censusanalyser.controller;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.models.CSVStateCensus;
-import com.bridgelabz.censusanalyser.models.CSVStateCode;
 import com.bridgelabz.censusanalyser.models.ParamConstants;
 import com.bridgelabz.censusanalyser.opencsvbuilder.CSVBuilderException;
 import com.bridgelabz.censusanalyser.opencsvbuilder.CSVBuilderFactory;
 import com.bridgelabz.censusanalyser.opencsvbuilder.ICSVBuilder;
 import com.google.gson.Gson;
+import com.opencsv.bean.CsvToBeanBuilder;
 
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
 public class StateCensusAnalyser {
+    private static final String SAMPLE_JSON_FILE_PATH = "./json-sample.json";
     public int loadIndiaCensusData(String csvFilePath) {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
@@ -92,6 +92,19 @@ public class StateCensusAnalyser {
         } catch (CSVBuilderException e) {
             throw new CensusAnalyserException(e.getMessage(),
                                             CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
+        }
+    }
+
+    public void jsonFileWriter(String csvFilePath){
+        try(Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))){
+            CsvToBeanBuilder<CSVStateCensus> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
+            csvToBeanBuilder.withType(CSVStateCensus.class);
+            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
+            FileWriter writer = new FileWriter(SAMPLE_JSON_FILE_PATH);
+            writer.write(getStateWiseSortedCensusData(csvFilePath, "AREA"));
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
