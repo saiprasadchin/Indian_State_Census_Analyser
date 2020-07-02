@@ -1,12 +1,12 @@
 package com.bridgelabz.censusanalyser.controller;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.models.CSVStateCensus;
+import com.bridgelabz.censusanalyser.models.CSVStateCode;
 import com.bridgelabz.censusanalyser.models.ParamConstants;
 import com.bridgelabz.censusanalyser.opencsvbuilder.CSVBuilderException;
 import com.bridgelabz.censusanalyser.opencsvbuilder.CSVBuilderFactory;
 import com.bridgelabz.censusanalyser.opencsvbuilder.ICSVBuilder;
 import com.google.gson.Gson;
-import com.opencsv.bean.CsvToBeanBuilder;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -19,11 +19,13 @@ import java.util.stream.StreamSupport;
 
 public class StateCensusAnalyser {
     private static final String SAMPLE_JSON_FILE_PATH = "./json-sample.json";
+    List<CSVStateCensus> csvStateCensusList = null;
+
     public int loadIndiaCensusData(String csvFilePath) {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            List<CSVStateCensus> censusCSVList = csvBuilder.getCSVFileList(reader, CSVStateCensus.class);
-            return censusCSVList.size();
+            this.csvStateCensusList = csvBuilder.getCSVFileList(reader, CSVStateCensus.class);
+            return csvStateCensusList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -39,8 +41,8 @@ public class StateCensusAnalyser {
     public int loadIndiaStateCodeData(String csvFilePath) {
         try (Reader readerState = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            List<CSVStateCensus> censusCSVList = csvBuilder.getCSVFileList(readerState, CSVStateCensus.class);
-            return censusCSVList.size();
+            List<CSVStateCode> stateCodeList = csvBuilder.getCSVFileList(readerState, CSVStateCode.class);
+            return stateCodeList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.STATE_CODE_FILE_PROBLEM);
@@ -60,51 +62,40 @@ public class StateCensusAnalyser {
         return numOfEnteries;
     }
 
-    public String getStateWiseSortedCensusData(String csvFilePath, String sortingParam) {
-        try (Reader readerState = Files.newBufferedReader(Paths.get(csvFilePath))) {
-            ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            List<CSVStateCensus> censusCSVList = csvBuilder.getCSVFileList(readerState, CSVStateCensus.class);
+    public String getStateWiseSortedCensusData(String sortingParam ) {
+
             switch(sortingParam){
                 case ParamConstants.STATE :
-                    censusCSVList.sort((CSVStateCensus c1, CSVStateCensus c2) -> c1.state.compareTo(c2.state));
+                    this.csvStateCensusList.sort((CSVStateCensus c1, CSVStateCensus c2) -> c1.state.compareTo(c2.state));
                     break;
                 case ParamConstants.POPULAS_STATE :
-                    censusCSVList.sort((CSVStateCensus c1, CSVStateCensus c2) -> c2.population.compareTo(c1.population));
+                    this.csvStateCensusList.sort((CSVStateCensus c1, CSVStateCensus c2) -> c2.population.compareTo(c1.population));
                     break;
                 case ParamConstants.POPULATION_DENSITY :
-                    censusCSVList.sort((CSVStateCensus c1, CSVStateCensus c2) -> c2.densityPerSqKm.compareTo(c1.densityPerSqKm));
+                    this.csvStateCensusList.sort((CSVStateCensus c1, CSVStateCensus c2) -> c2.densityPerSqKm.compareTo(c1.densityPerSqKm));
                     break;
                 case ParamConstants.AREA :
-                    censusCSVList.sort((CSVStateCensus c1, CSVStateCensus c2) -> c2.areaInSqKm.compareTo(c1.areaInSqKm));
+                    this.csvStateCensusList.sort((CSVStateCensus c1, CSVStateCensus c2) -> c2.areaInSqKm.compareTo(c1.areaInSqKm));
                     break;
                 default:
                     System.out.println("Fail");
             }
 
-            String sortedStateCensusJson = new Gson().toJson(censusCSVList);
+            String sortedStateCensusJson = new Gson().toJson(this.csvStateCensusList);
+            System.out.println(sortedStateCensusJson);
             return sortedStateCensusJson;
-        } catch (IOException e) {
-            throw new CensusAnalyserException(e.getMessage(),
-                                            CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
-        } catch (RuntimeException e) {
-            throw new CensusAnalyserException(e.getMessage(),
-                                            CensusAnalyserException.ExceptionType.WRONG_DELIMETER_WRONG_HEADER_FILE);
-        } catch (CSVBuilderException e) {
-            throw new CensusAnalyserException(e.getMessage(),
-                                            CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
-        }
     }
 
-    public void jsonFileWriter(String csvFilePath){
-        try(Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))){
-            CsvToBeanBuilder<CSVStateCensus> csvToBeanBuilder = new CsvToBeanBuilder<>(reader);
-            csvToBeanBuilder.withType(CSVStateCensus.class);
-            csvToBeanBuilder.withIgnoreLeadingWhiteSpace(true);
-            FileWriter writer = new FileWriter(SAMPLE_JSON_FILE_PATH);
-            writer.write(getStateWiseSortedCensusData(csvFilePath, "AREA"));
+    public void jsonFileWriter(String csvFilePath)  {
+        loadIndiaCensusData(csvFilePath);
+        FileWriter writer = null;
+        try {
+            writer = new FileWriter(SAMPLE_JSON_FILE_PATH);
+            writer.write(getStateWiseSortedCensusData( "AREA"));
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 }
