@@ -2,6 +2,7 @@ package com.bridgelabz.censusanalyser.controller;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.models.CSVStateCensus;
 import com.bridgelabz.censusanalyser.models.CSVStateCode;
+import com.bridgelabz.censusanalyser.models.IndiaCensusDAO;
 import com.bridgelabz.censusanalyser.models.ParamConstants;
 import com.bridgelabz.censusanalyser.opencsvbuilder.CSVBuilderException;
 import com.bridgelabz.censusanalyser.opencsvbuilder.CSVBuilderFactory;
@@ -13,18 +14,27 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.StreamSupport;
 
 public class StateCensusAnalyser {
     private static final String SAMPLE_JSON_FILE_PATH = "./json-sample.json";
-    List<CSVStateCensus> csvStateCensusList = null;
+    List<IndiaCensusDAO> indiaCensusDAOList = null;
+
+    public StateCensusAnalyser(){
+        this.indiaCensusDAOList = new ArrayList<IndiaCensusDAO>();
+    }
 
     public int loadIndiaCensusData(String csvFilePath) {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            this.csvStateCensusList = csvBuilder.getCSVFileList(reader, CSVStateCensus.class);
+            List<CSVStateCensus> csvStateCensusList = csvBuilder.getCSVFileList(reader, CSVStateCensus.class);
+            csvStateCensusList.stream().forEach(c->{
+                IndiaCensusDAO indiaCensusDAO = new IndiaCensusDAO(c);
+                this.indiaCensusDAOList.add(indiaCensusDAO);
+            });
             return csvStateCensusList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
@@ -66,23 +76,22 @@ public class StateCensusAnalyser {
 
             switch(sortingParam){
                 case ParamConstants.STATE :
-                    this.csvStateCensusList.sort((CSVStateCensus c1, CSVStateCensus c2) -> c1.state.compareTo(c2.state));
+                    this.indiaCensusDAOList.sort((IndiaCensusDAO c1, IndiaCensusDAO c2) -> c1.state.compareTo(c2.state));
                     break;
                 case ParamConstants.POPULAS_STATE :
-                    this.csvStateCensusList.sort((CSVStateCensus c1, CSVStateCensus c2) -> c2.population.compareTo(c1.population));
+                    this.indiaCensusDAOList.sort((IndiaCensusDAO c1, IndiaCensusDAO c2) -> c2.population.compareTo(c1.population));
                     break;
                 case ParamConstants.POPULATION_DENSITY :
-                    this.csvStateCensusList.sort((CSVStateCensus c1, CSVStateCensus c2) -> c2.densityPerSqKm.compareTo(c1.densityPerSqKm));
+                    this.indiaCensusDAOList.sort((IndiaCensusDAO c1, IndiaCensusDAO c2) -> c2.densityPerSqKm.compareTo(c1.densityPerSqKm));
                     break;
                 case ParamConstants.AREA :
-                    this.csvStateCensusList.sort((CSVStateCensus c1, CSVStateCensus c2) -> c2.areaInSqKm.compareTo(c1.areaInSqKm));
+                    this.indiaCensusDAOList.sort((IndiaCensusDAO c1, IndiaCensusDAO c2) -> c2.areaInSqKm.compareTo(c1.areaInSqKm));
                     break;
                 default:
                     System.out.println("Fail");
             }
 
-            String sortedStateCensusJson = new Gson().toJson(this.csvStateCensusList);
-            System.out.println(sortedStateCensusJson);
+            String sortedStateCensusJson = new Gson().toJson(this.indiaCensusDAOList);
             return sortedStateCensusJson;
     }
 
