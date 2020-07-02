@@ -181,9 +181,10 @@ public class StateCensusAnalyserTest {
     @Test
     public void getIndianCensusData_WhenSortedOnPopulationDensityFile_ShouldReturnSortedResult() {
         StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
-        int actualAvlue = censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+        censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
         String jsonString  = censusAnalyser.getStateWiseSortedCensusData("POPULATION_DENSITY");
         censusAnalyser.jsonFileWriter(POPULATION_DENSITY_JSON_FILE_PATH,jsonString);
-        Assert.assertEquals(29, actualAvlue);
+        CSVStateCensus[] censusCSV = new Gson().fromJson(jsonString, CSVStateCensus[].class);
+        Assert.assertEquals(1102, (int)censusCSV[0].densityPerSqKm);
     }
 }
