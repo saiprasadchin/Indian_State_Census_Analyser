@@ -17,14 +17,22 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class StateCensusAnalyser {
-    private static final String SAMPLE_JSON_FILE_PATH = "./json-sample.json";
     List<IndiaCensusDAO> indiaCensusDAOList = null;
 
     public StateCensusAnalyser(){
         this.indiaCensusDAOList = new ArrayList<IndiaCensusDAO>();
+    }
+
+    public Map<String, IndiaCensusDAO> loadCensusData(String csvFilePath) {
+        loadIndiaCensusData(csvFilePath);
+        Map<String, IndiaCensusDAO> censusDataMap = this.indiaCensusDAOList.stream().collect(Collectors.toMap(IndiaCensusDAO::getState,Function.identity()));
+        return censusDataMap;
     }
 
     public int loadIndiaCensusData(String csvFilePath) {
@@ -85,22 +93,22 @@ public class StateCensusAnalyser {
                     this.indiaCensusDAOList.sort((IndiaCensusDAO c1, IndiaCensusDAO c2) -> c2.densityPerSqKm.compareTo(c1.densityPerSqKm));
                     break;
                 case ParamConstants.AREA :
+                    System.out.println("area");
                     this.indiaCensusDAOList.sort((IndiaCensusDAO c1, IndiaCensusDAO c2) -> c2.areaInSqKm.compareTo(c1.areaInSqKm));
                     break;
                 default:
-                    System.out.println("Fail");
+                    System.out.println("Fail=======================");
             }
 
             String sortedStateCensusJson = new Gson().toJson(this.indiaCensusDAOList);
             return sortedStateCensusJson;
     }
 
-    public void jsonFileWriter(String csvFilePath)  {
-        loadIndiaCensusData(csvFilePath);
+    public void jsonFileWriter(String csvFilePath,String jsonString)  {
         FileWriter writer = null;
         try {
-            writer = new FileWriter(SAMPLE_JSON_FILE_PATH);
-            writer.write(getStateWiseSortedCensusData( "AREA"));
+            writer = new FileWriter(csvFilePath);
+            writer.write(jsonString);
             writer.close();
         } catch (IOException e) {
             e.printStackTrace();

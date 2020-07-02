@@ -15,6 +15,7 @@ public class StateCensusAnalyserTest {
     private static final String INDIA_STATE_CODE_CSV_FILE_PATH_INCORRECT_TYPE = "./src/test/resources/IndiaStateCode.txt";
     private static final String WRONG_STATE_CODE_CSV_FILE_PATH = "./src/test/resources/IndiaStateCode1.csv";
     private static final String INDIA_STATE_CODE_CSV_FILE_PATH_INCORRECT_HEADER = "./src/test/resources/IndiaStateCodeWrong.csv";
+    private static final String SAMPLE_JSON_FILE_PATH = "./src/test/output/json-sample.json";
 
     @Test
     public void givenIndianCensusCSVFile_ReturnsCorrectRecords() {
@@ -159,9 +160,10 @@ public class StateCensusAnalyserTest {
     @Test
     public void getIndianCensusData_WhenSortedOnArea_ShouldReturnSortedResult() {
         StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
-        censusAnalyser.jsonFileWriter(INDIA_CENSUS_CSV_FILE_PATH);
-        String sortedCensusData = censusAnalyser.getStateWiseSortedCensusData("AREA");
-        CSVStateCensus[] censusCSV = new Gson().fromJson(sortedCensusData, CSVStateCensus[].class);
+        censusAnalyser.loadIndiaCensusData(INDIA_CENSUS_CSV_FILE_PATH);
+        String jsonString  = censusAnalyser.getStateWiseSortedCensusData("AREA");
+        censusAnalyser.jsonFileWriter(SAMPLE_JSON_FILE_PATH,jsonString);
+        CSVStateCensus[] censusCSV = new Gson().fromJson(jsonString, CSVStateCensus[].class);
         Assert.assertEquals("Rajasthan", censusCSV[0].state);
     }
 }

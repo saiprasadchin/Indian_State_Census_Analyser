@@ -12,4 +12,8 @@ public class IndiaCensusDAO {
         this.areaInSqKm = csvStateCensus.areaInSqKm;
         this.densityPerSqKm  = csvStateCensus.densityPerSqKm;
     }
+
+    public String getState() {
+        return state;
+    }
 }
