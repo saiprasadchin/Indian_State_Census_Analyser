@@ -29,4 +29,5 @@ public class USCensus {
 
     @CsvBindByName(column = "Housing Density", required = true)
     public Double housingDensity;
+
 }

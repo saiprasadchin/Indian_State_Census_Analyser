@@ -113,8 +113,10 @@ public class StateCensusAnalyser {
                     this.censusDAOList.sort((CensusDAO c1, CensusDAO c2) -> c2.densityPerSqKm.compareTo(c1.densityPerSqKm));
                     break;
                 case ParamConstants.AREA :
-                    System.out.println("area");
                     this.censusDAOList.sort((CensusDAO c1, CensusDAO c2) -> c2.areaInSqKm.compareTo(c1.areaInSqKm));
+                    break;
+                case ParamConstants.US_POPULATION_DENSITY :
+                    this.censusDAOList.sort((CensusDAO c1, CensusDAO c2) -> c2.populationDensity.compareTo(c1.populationDensity));
                     break;
                 default:
                     System.out.println("Fail=======================");
