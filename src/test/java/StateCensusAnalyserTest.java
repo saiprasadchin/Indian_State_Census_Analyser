@@ -8,6 +8,7 @@ import org.junit.Test;
 
 public class StateCensusAnalyserTest {
     private static final String INDIA_CENSUS_CSV_FILE_PATH = "./src/test/resources/IndiaStateCensusData.csv";
+    private static final String US_CENSUS_CSV_FILE_PATH = "./src/test/resources/USCensusData.csv";
     private static final String INDIA_CENSUS_CSV_FILE_PATH_INCORRECT_TYPE = "./src/test/resources/IndiaStateCensusData.txt";
     private static final String WRONG_CSV_FILE_PATH = "./src/test/resources/IndiaStateCensusData1.csv";
     private static final String INDIA_CENSUS_CSV_FILE_PATH_INCORRECT_HEADER = "./src/test/resources/IndiaStateCensusDataWrong.csv";
