@@ -5,7 +5,7 @@ public class CensusDAO {
     public Integer population;
     public Integer areaInSqKm;
     public Integer densityPerSqKm;
-    public Integer stateId;
+    public String stateId;
     public Integer housingUnits;
     public Double area;
     public Double waterArea;
