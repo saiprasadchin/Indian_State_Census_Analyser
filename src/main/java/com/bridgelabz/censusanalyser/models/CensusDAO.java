@@ -33,6 +33,11 @@ public class CensusDAO {
 
     }
 
+    public CensusDAO(CSVStateCode csvStateCode){
+        this.state = csvStateCode.stateName;
+        this.population = csvStateCode.stateCode;
+    }
+
     public String getState() {
         return state;
     }

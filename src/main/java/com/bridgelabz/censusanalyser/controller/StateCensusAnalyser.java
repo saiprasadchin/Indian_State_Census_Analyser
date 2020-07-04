@@ -5,34 +5,29 @@ import com.bridgelabz.censusanalyser.opencsvbuilder.CSVBuilderException;
 import com.bridgelabz.censusanalyser.opencsvbuilder.CSVBuilderFactory;
 import com.bridgelabz.censusanalyser.opencsvbuilder.ICSVBuilder;
 import com.google.gson.Gson;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 
 public class StateCensusAnalyser {
     List<CensusDAO> censusDAOList = null;
+    //List CensusList = new ArrayList();
 
     public StateCensusAnalyser(){
         this.censusDAOList = new ArrayList<CensusDAO>();
     }
 
     public Map<String, CensusDAO> loadCensusData(String csvFilePath) {
-        loadIndiaCensusData(csvFilePath);
         Map<String, CensusDAO> censusDataMap = this.censusDAOList.stream().collect(Collectors.toMap(CensusDAO::getState,Function.identity()));
         return censusDataMap;
     }
-
-
 
     public int loadIndiaCensusData(String csvFilePath) {
         try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath))) {
@@ -91,13 +86,6 @@ public class StateCensusAnalyser {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
         }
-    }
-
-    private <E> int getCount(Iterator<E> iterator) {
-        Iterable<E> csvIterable = () -> iterator;
-        int numOfEnteries = (int) StreamSupport.stream(csvIterable.spliterator(), false)
-                .count();
-        return numOfEnteries;
     }
 
     public String getStateWiseSortedCensusData(String sortingParam ) {

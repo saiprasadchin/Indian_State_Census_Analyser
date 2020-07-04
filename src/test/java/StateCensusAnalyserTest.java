@@ -212,9 +212,11 @@ public class StateCensusAnalyserTest {
     public void getUSCensusData_WhenSortedOnArea_ShouldReturnSortedResult() {
         StateCensusAnalyser censusAnalyser = new StateCensusAnalyser();
         censusAnalyser.loadUSCensusData(US_CENSUS_CSV_FILE_PATH);
+        censusAnalyser.loadCensusData(US_CENSUS_CSV_FILE_PATH);
         String sortedCensusData = censusAnalyser.getStateWiseSortedCensusData("US_POPULATION_DENSITY");
         USCensus[] censusCSV = new Gson().fromJson(sortedCensusData, USCensus[].class);
         System.out.println(censusCSV[0].area);
         Assert.assertEquals((Double) 177.0, censusCSV[0].area);
     }
+
 }
