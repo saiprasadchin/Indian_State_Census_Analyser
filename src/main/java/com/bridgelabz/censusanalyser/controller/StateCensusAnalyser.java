@@ -18,7 +18,6 @@ import java.util.stream.Collectors;
 
 public class StateCensusAnalyser {
     List<CensusDAO> censusDAOList = null;
-    //List CensusList = new ArrayList();
 
     public StateCensusAnalyser(){
         this.censusDAOList = new ArrayList<CensusDAO>();
@@ -34,9 +33,9 @@ public class StateCensusAnalyser {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
             List<CSVStateCensus> csvStateCensusList = csvBuilder.getCSVFileList(reader, CSVStateCensus.class);
             csvStateCensusList.stream().forEach(c->{
-                CensusDAO censusDAO = new CensusDAO(c);
-                this.censusDAOList.add(censusDAO);
-            });
+            CensusDAO censusDAO = new CensusDAO(c);
+            this.censusDAOList.add(censusDAO);
+        });
             return csvStateCensusList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
@@ -75,6 +74,10 @@ public class StateCensusAnalyser {
         try (Reader readerState = Files.newBufferedReader(Paths.get(csvFilePath))) {
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
             List<CSVStateCode> stateCodeList = csvBuilder.getCSVFileList(readerState, CSVStateCode.class);
+            stateCodeList.stream().forEach(c->{
+                CensusDAO censusDAO = new CensusDAO(c);
+                this.censusDAOList.add(censusDAO);
+            });
             return stateCodeList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),

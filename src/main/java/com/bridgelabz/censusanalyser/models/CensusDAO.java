@@ -12,6 +12,7 @@ public class CensusDAO {
     public Double landArea;
     public Double populationDensity;
     public Double housingDensity;
+    public String stateCode;
 
     public CensusDAO(CSVStateCensus csvStateCensus){
         this.state = csvStateCensus.state;
@@ -35,7 +36,7 @@ public class CensusDAO {
 
     public CensusDAO(CSVStateCode csvStateCode){
         this.state = csvStateCode.stateName;
-        this.population = csvStateCode.stateCode;
+        this.stateCode = csvStateCode.stateCode;
     }
 
     public String getState() {
