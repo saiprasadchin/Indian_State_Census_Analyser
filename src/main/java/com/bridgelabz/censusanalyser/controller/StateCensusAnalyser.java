@@ -19,6 +19,7 @@ public class StateCensusAnalyser {
 
     public int loadCensusData(Country country, String... csvFilePath)throws CensusAnalyserException{
         Map<String, CensusDAO> censusDataMap = new CensusLoader().loadCensusData(country, csvFilePath);
+        censusDAOList.addAll(censusDataMap.values());
         return censusDataMap.values().size();
     }
 

@@ -31,28 +31,25 @@ public class CensusLoader {
             throw new CensusAnalyserException("Invalid Country Name", CensusAnalyserException.ExceptionType.INVALID_COUNTRY);
         }
         public <E> Map<String, CensusDAO> loadCensusData(Class<E> censusCSVClass, String... csvFilePath) {
-            Map<String, CensusDAO> censusStateMap = new HashMap<>();
+            Map<String, CensusDAO> censusMap = new HashMap<>();
             try (Reader reader = Files.newBufferedReader(Paths.get(csvFilePath[0]));) {
                 ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
                 Iterator<E> csvFileIterator = csvBuilder.getCSVFileIterator(reader, censusCSVClass);
-                System.out.println(censusCSVClass.getName());
                 Iterable<E> csvIterable = () -> csvFileIterator;
                 if (censusCSVClass.getName().equals("com.bridgelabz.censusanalyser.models.CSVStateCensus")) {
-                    System.out.println("test");
                     StreamSupport.stream(csvIterable.spliterator(), false)
                             .map(CSVStateCensus.class::cast)
-                            .forEach(csvState -> censusStateMap.put(csvState.state, new CensusDAO(csvState)));
-                } else if (censusCSVClass.getName() == "com.bridgelabz.censusAnalyser.models.USCensus") {
+                            .forEach(csvState -> censusMap.put(csvState.state, new CensusDAO(csvState)));
+                } else if (censusCSVClass.getName() == "com.bridgelabz.censusanalyser.models.USCensus") {
                     StreamSupport.stream(csvIterable.spliterator(), false)
                             .map(USCensus.class::cast)
-                            .forEach(csvState -> censusStateMap.put(csvState.state, new CensusDAO(csvState)));
-                } else if (censusCSVClass.getName() == "com.bridgelabz.censusAnalyser.models.CSVStateCode") {
+                            .forEach(csvState -> censusMap.put(csvState.state, new CensusDAO(csvState)));
+                } else if (censusCSVClass.getName() == "com.bridgelabz.censusanalyser.models.CSVStateCode") {
                     StreamSupport.stream(csvIterable.spliterator(), false)
                             .map(CSVStateCode.class::cast)
-                            .forEach(csvState -> censusStateMap.put(csvState.stateName, new CensusDAO(csvState)));
+                            .forEach(csvState -> censusMap.put(csvState.stateName, new CensusDAO(csvState)));
                 }
-                System.out.println(censusStateMap.size());
-                return censusStateMap;
+                return censusMap;
             } catch (IOException e) {
                 throw new CensusAnalyserException(e.getMessage(),
                         CensusAnalyserException.ExceptionType.FILE_PROBLEM);
@@ -64,5 +61,5 @@ public class CensusLoader {
                         CensusAnalyserException.ExceptionType.UNABLE_TO_PARSE);
             }
         }
-    }
-//}
+}
+
