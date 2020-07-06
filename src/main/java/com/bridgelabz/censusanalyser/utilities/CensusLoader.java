@@ -1,6 +1,6 @@
 package com.bridgelabz.censusanalyser.utilities;
 
-import com.bridgelabz.censusanalyser.controller.StateCensusAnalyser;
+import com.bridgelabz.censusanalyser.controller.CensusAnalyser;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.models.CSVStateCensus;
 import com.bridgelabz.censusanalyser.models.CSVStateCode;
@@ -21,12 +21,12 @@ import java.util.stream.StreamSupport;
 
 public class CensusLoader {
 
-        public Map<String, CensusDAO> loadCensusData(StateCensusAnalyser.Country country, String... csvFilePath) {
-            if (country.equals(StateCensusAnalyser.Country.INDIA))
+        public Map<String, CensusDAO> loadCensusData(CensusAnalyser.Country country, String... csvFilePath) {
+            if (country.equals(CensusAnalyser.Country.INDIA))
                 return loadCensusData(CSVStateCensus.class, csvFilePath);
-            if (country.equals(StateCensusAnalyser.Country.US))
+            if (country.equals(CensusAnalyser.Country.US))
                 return loadCensusData(USCensus.class, csvFilePath);
-            if (country.equals(StateCensusAnalyser.Country.INDIA_STATE))
+            if (country.equals(CensusAnalyser.Country.INDIA_STATE))
                 return loadCensusData(CSVStateCode.class, csvFilePath);
             throw new CensusAnalyserException("Invalid Country Name", CensusAnalyserException.ExceptionType.INVALID_COUNTRY);
         }

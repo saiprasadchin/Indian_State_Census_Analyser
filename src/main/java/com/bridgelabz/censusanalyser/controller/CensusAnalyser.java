@@ -1,7 +1,7 @@
 package com.bridgelabz.censusanalyser.controller;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.models.*;
-import com.bridgelabz.censusanalyser.utilities.CensusLoader;
+import com.bridgelabz.censusanalyser.utilities.CensusAdaptorFactory;
 import com.google.gson.Gson;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,7 +20,8 @@ public class CensusAnalyser {
     }
 
     public int loadCensusData(Country country, String... csvFilePath)throws CensusAnalyserException{
-        Map<String, CensusDAO> censusDataMap = new CensusLoader().loadCensusData(country, csvFilePath);
+        Map<String, CensusDAO> censusDataMap = new CensusAdaptorFactory().getCensusAdaptor(country, csvFilePath);
+       // Map<String, CensusDAO> censusDataMap = new CensusLoader().loadCensusData(country, csvFilePath);
         censusDAOList.addAll(censusDataMap.values());
         return censusDataMap.values().size();
     }
