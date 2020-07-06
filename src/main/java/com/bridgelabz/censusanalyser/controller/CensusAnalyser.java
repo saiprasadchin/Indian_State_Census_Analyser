@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class StateCensusAnalyser {
-    public enum Country {INDIA, INDIA_STATE, US}
+public class CensusAnalyser {
+    public enum Country {
+        INDIA, INDIA_STATE, US
+    }
     List<CensusDAO> censusDAOList = null;
 
-    public StateCensusAnalyser(){
+    public CensusAnalyser(){
         this.censusDAOList = new ArrayList<CensusDAO>();
     }
 
