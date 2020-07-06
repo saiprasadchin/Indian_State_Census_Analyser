@@ -1,5 +1,7 @@
 package com.bridgelabz.censusanalyser.models;
 
+import com.bridgelabz.censusanalyser.controller.CensusAnalyser;
+
 public class CensusDAO {
     public String state;
     public Integer population;
@@ -39,6 +41,12 @@ public class CensusDAO {
         this.stateCode = csvStateCode.stateCode;
     }
 
+    public Object getSpecificCensusData(CensusAnalyser.Country country){
+        if(country.equals(CensusAnalyser.Country.INDIA))
+            return new CSVStateCensus(this.state,this.population,this.areaInSqKm,this.densityPerSqKm);
+
+        return null;
+    }
     public String getState() {
         return state;
     }
