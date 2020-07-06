@@ -2,7 +2,7 @@ package com.bridgelabz.censusanalyser.utilities;
 
 import com.bridgelabz.censusanalyser.controller.CensusAnalyser;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
-import com.bridgelabz.censusanalyser.models.CensusDAO;
+import com.bridgelabz.censusanalyser.dao.CensusDAO;
 
 import java.util.Map;
 

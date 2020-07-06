@@ -1,6 +1,9 @@
-package com.bridgelabz.censusanalyser.models;
+package com.bridgelabz.censusanalyser.dao;
 
 import com.bridgelabz.censusanalyser.controller.CensusAnalyser;
+import com.bridgelabz.censusanalyser.models.CSVStateCensus;
+import com.bridgelabz.censusanalyser.models.CSVStateCode;
+import com.bridgelabz.censusanalyser.models.USCensus;
 
 public class CensusDAO {
     public String state;

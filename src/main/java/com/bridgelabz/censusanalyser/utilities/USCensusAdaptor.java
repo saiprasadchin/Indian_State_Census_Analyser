@@ -1,6 +1,6 @@
 package com.bridgelabz.censusanalyser.utilities;
 
-import com.bridgelabz.censusanalyser.models.CensusDAO;
+import com.bridgelabz.censusanalyser.dao.CensusDAO;
 import com.bridgelabz.censusanalyser.models.USCensus;
 
 import java.util.Map;

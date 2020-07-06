@@ -1,4 +1,5 @@
 package com.bridgelabz.censusanalyser.controller;
+import com.bridgelabz.censusanalyser.dao.CensusDAO;
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.models.*;
 import com.bridgelabz.censusanalyser.utilities.CensusAdaptorFactory;
