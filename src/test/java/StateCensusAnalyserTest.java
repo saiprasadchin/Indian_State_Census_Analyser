@@ -7,6 +7,9 @@ import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Test;
 
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 
 public class StateCensusAnalyserTest {
     private static final String INDIA_CENSUS_CSV_FILE_PATH = "./src/test/resources/IndiaStateCensusData.csv";
@@ -220,6 +223,26 @@ public class StateCensusAnalyserTest {
     @Test
     public void givenUSCensusData_ShouldReturnCorrectRecord() {
         CensusAnalyser censusAnalyser = new CensusAnalyser();
+        int numOfState = censusAnalyser.loadCensusData(CensusAnalyser.Country.US, US_CENSUS_CSV_FILE_PATH);
+        Assert.assertEquals(51, numOfState);
+    }
+    //With Mockito
+    @Test
+    public void givenIndianCensusCSVFile_withMockito_ReturnsCorrectRecords() {
+        CensusAnalyser censusAnalyser =  mock(CensusAnalyser.class);
+        when(censusAnalyser.loadCensusData(CensusAnalyser.Country.INDIA, INDIA_CENSUS_CSV_FILE_PATH,INDIA_STATE_CODE)).thenReturn(29);
+        try {
+            int numOfRecords = censusAnalyser.loadCensusData(CensusAnalyser.Country.INDIA, INDIA_CENSUS_CSV_FILE_PATH,INDIA_STATE_CODE);
+            Assert.assertEquals(29, numOfRecords);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    //With Mockito
+    @Test
+    public void givenUSCensusData_withMockito_ShouldReturnCorrectRecord() {
+        CensusAnalyser censusAnalyser =  mock(CensusAnalyser.class);
+        when(censusAnalyser.loadCensusData(CensusAnalyser.Country.US, US_CENSUS_CSV_FILE_PATH)).thenReturn(51);
         int numOfState = censusAnalyser.loadCensusData(CensusAnalyser.Country.US, US_CENSUS_CSV_FILE_PATH);
         Assert.assertEquals(51, numOfState);
     }
