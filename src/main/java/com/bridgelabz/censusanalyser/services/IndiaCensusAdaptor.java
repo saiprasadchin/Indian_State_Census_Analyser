@@ -1,4 +1,4 @@
-package com.bridgelabz.censusanalyser.utilities;
+package com.bridgelabz.censusanalyser.services;
 
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.models.CSVStateCensus;
@@ -16,7 +16,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 
-public class IndiaCensusAdaptor extends CensusAdaptor{
+public class IndiaCensusAdaptor extends CensusAdaptor {
     @Override
     public Map<String, CensusDAO> loadCensusData(String... csvFilePath) {
         Map<String, CensusDAO> censusStateMap = super.loadCensusData(CSVStateCensus.class, csvFilePath[0]);

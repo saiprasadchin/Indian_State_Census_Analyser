@@ -1,4 +1,4 @@
-package com.bridgelabz.censusanalyser.utilities;
+package com.bridgelabz.censusanalyser.services;
 
 import com.bridgelabz.censusanalyser.exception.CensusAnalyserException;
 import com.bridgelabz.censusanalyser.models.CSVStateCensus;
