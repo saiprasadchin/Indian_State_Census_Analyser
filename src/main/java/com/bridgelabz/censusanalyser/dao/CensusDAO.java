@@ -19,6 +19,13 @@ public class CensusDAO {
     public Double housingDensity;
     public String stateCode;
 
+    public CensusDAO(String state, Integer i, double v, double v1, String od) {
+        this.state = state;
+        this.population = i;
+        this.area = v;
+        this.stateCode = od;
+    }
+
     public CensusDAO(CSVStateCensus csvStateCensus){
         this.state = csvStateCensus.state;
         this.population = csvStateCensus.population;
